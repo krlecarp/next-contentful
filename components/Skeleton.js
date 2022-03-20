@@ -5,7 +5,7 @@ return (
         <div className="s-header"></div>
         <div className="s-content"></div>
         <div className="s-content"></div>
-        <div className="s-content"></div>
+        <div className="s-content"></div> 
 
         <style jsx>{`
             .skeleton {
