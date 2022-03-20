@@ -27,7 +27,6 @@ export const getStaticPaths = async () => {
 }
 
 export async function getStaticProps({params}) {
-  if (!recipe) return <Skeleton />
 
   const { items } = await client.getEntries({
     content_type: 'recipe', 
@@ -42,6 +41,8 @@ export async function getStaticProps({params}) {
 }
 
 export default function RecipeDetails({recipe}) {
+  if (!recipe) return <Skeleton />
+
   const { featuredImage, title, cookingTime, ingredients, method } = recipe.fields 
   console.log(recipe)
 
