@@ -2,6 +2,8 @@ import { createClient } from "contentful"
 import Image from 'next/image'
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer"
 import Skeleton from "../../components/Skeleton"
+import safeJsonStringify from 'safe-json-stringify'
+
 
 const client = createClient({
   space: process.env.CONTENTFUL_SPACE_ID,
@@ -10,9 +12,9 @@ const client = createClient({
 })
 
 export const getStaticPaths = async () => {
-  const res = await client.getEntries({
-    content_type: 'recipe'
-  })
+  const raw = await client.getEntries({ content_type: 'courseActivity' })
+  const stringifyRaw = safeJsonStringify(raw)
+  const res = JSON.parse(stringifyRaw)
 
   const paths = res.items.map(item => {
     return {
@@ -28,10 +30,13 @@ export const getStaticPaths = async () => {
 
 export async function getStaticProps({params}) {
 
-  const { items } = await client.getEntries({
-    content_type: 'recipe', 
+  const raw = await client.getEntries({
+    content_type: 'courseActivity', 
     'fields.slug': params.slug
   })
+  const stringifyRaw = safeJsonStringify(raw)
+  const { items } = JSON.parse(stringifyRaw)
+
 
   if (!items.length){
     return {
@@ -43,38 +48,55 @@ export async function getStaticProps({params}) {
   }
 
   return {
-    props: { recipe: items[0] },
+    props: { activity: items[0] },
     revalidate: 1
   }
 
 }
 
-export default function RecipeDetails({recipe}) {
-  if (!recipe) return <Skeleton />
+export default function RecipeDetails({activity}) {
+  if (!activity) return <Skeleton />
 
-  const { featuredImage, title, cookingTime, ingredients, method } = recipe.fields 
-  console.log(recipe)
+  const { heroImage, title, descriptionLong, descriptionFull } = activity.fields 
+  console.log(activity)
+
+         {/* actions: (3) [{…}, {…}, {…}]
+        articlesRelated: [{…}]
+        barriersRelated: [{…}]
+        descriptionLong: "Lightweight, free-flying, foot-launched glider aircraft with no rigid primary structure.  One part adrenaline, one part serenity."
+        descriptionShort: "Lightweight, free-flying, foot-launched glider aircraft with no rigid primary structure.  One part adrenaline, one part serenity."
+        guides: [{…}]
+        heroImage: {metadata: {…}, sys: {…}, fields: {…}}
+        lessons: [{…}]
+        locationKeywords: "Paragliding"
+        slug: "paragliding"
+        title: "Paragliding" */}
 
   return (
     <div>
       <div className="banner">
+
+      {heroImage && 
         <Image 
-          src = {'https:' + featuredImage.fields.file.url}
-          width = {featuredImage.fields.file.details.image.width}
-          height = {featuredImage.fields.file.details.image.height}
+          src = {'https:' + heroImage.fields.file.url}
+          width = {heroImage.fields.file.details.image.width}
+          height = {heroImage.fields.file.details.image.height}
           />
+      }
           <h2>{ title }</h2>
       </div>
-      <div className="info">
-        <p>Takes about {cookingTime} to cook.</p>
+      {/* <div className="info">
+        <p>{cookingTime} to cook.</p>
         <h3>Ingredients</h3>
         {ingredients.map(ing=>(
           <span key={ing}>{ing}</span>
         ))}
-      </div>
+      </div> */}
       <div className="method">
-        <h3>Method:</h3>
-        <div>{documentToReactComponents(method)}</div>
+        <h3>Learn:</h3>
+        
+          <div>{descriptionFull && documentToReactComponents(descriptionFull)}</div> 
+          
       </div>
 
       <style jsx>{`

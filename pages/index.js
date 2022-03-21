@@ -1,5 +1,6 @@
 import { createClient } from "contentful"
 import RecipeCard from "../components/RecipeCard"
+import safeJsonStringify from 'safe-json-stringify'
 
 export async function getStaticProps() {
   const client = createClient({
@@ -7,27 +8,33 @@ export async function getStaticProps() {
     accessToken: process.env.CONTENTFUL_ACCESS_KEY,
   })
 
-  const res = await client.getEntries({content_type:'recipe'})
+  const raw = await client.getEntries({content_type:'courseActivity'})
+  const stringifyRaw = safeJsonStringify(raw)
+  const res = JSON.parse(stringifyRaw)
 
-  return {
-    props: { recipes: res.items },
-    revalidate: 1
-  }
+   return {
+     props: { activities: res.items },
+     revalidate: 1
+   }
 
 
 }
 
-export default function Recipes({ recipes }) {
-  console.log(recipes)
+export default function Recipes({ activities }) {
+  console.log(activities)
+
   return (
+    // <div>hi</div>
     <div className="recipe-list">
-      {recipes.map(recipe => 
-          <RecipeCard key={recipe.sys.id} recipe={recipe} />
+
+      {activities.map(activity =>
+        // <div>{activity.fields.title}</div>         
+          <RecipeCard key={activity.sys.id} activity={activity} />
         )}
 
         <style jsx>{`
-        
-        .recipe-list {
+          
+          .recipe-list {
           display:grid;
           grid-template-columns: 1fr 1fr;
           grid-gap:20px 60px;

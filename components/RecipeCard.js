@@ -1,28 +1,45 @@
 import Link from 'next/link'
 import Image from 'next/image'
 
-export default function RecipeCard ({ recipe }) {
+export default function RecipeCard ({ activity }) {
 
-    const { title, slug, cookingTime, thumbnail } = recipe.fields
+    const { title, slug, heroImage, descriptionShort } = activity.fields
 
     return (
         <div className="card">
 
+
+        {/* actions: (3) [{…}, {…}, {…}]
+        articlesRelated: [{…}]
+        barriersRelated: [{…}]
+        descriptionLong: "Lightweight, free-flying, foot-launched glider aircraft with no rigid primary structure.  One part adrenaline, one part serenity."
+        descriptionShort: "Lightweight, free-flying, foot-launched glider aircraft with no rigid primary structure.  One part adrenaline, one part serenity."
+        guides: [{…}]
+        heroImage: {metadata: {…}, sys: {…}, fields: {…}}
+        lessons: [{…}]
+        locationKeywords: "Paragliding"
+        slug: "paragliding"
+        title: "Paragliding" */}
+
             <div className="featured">
-                <Image 
-                    src={'https:' + thumbnail.fields.file.url}
-                    width={thumbnail.fields.file.details.image.width}
-                    height={thumbnail.fields.file.details.image.height}
-                    // width={500}
-                    // height={500}
-                    // layout='intrinsic'
-                    
-                />
+                
+                 
+                {heroImage && 
+                    <Image 
+                        src={heroImage && 'https:' + heroImage.fields.file.url}
+                        width={heroImage && heroImage.fields.file.details.image.width}
+                        height={heroImage && heroImage.fields.file.details.image.height}
+                        // width={500}
+                        // height={500}
+                        // layout='intrinsic'
+                        
+                    />
+                }   
             </div>
             <div className="content">
                 <div className="info">
                     <h4>{title}</h4>
-                    <p>Takes approx { cookingTime } min to make</p>
+                    <p>{descriptionShort}</p>
                 </div>
                 <div className="actions">
                     <Link href={'/recipes/' + slug }><a>cook this</a></Link>

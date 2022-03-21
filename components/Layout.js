@@ -6,11 +6,11 @@ export default function Layout({ children }) {
       <header>
         <Link href="/">
           <a>
-            <h1>
-              <span>Just Add</span>
-              <span>Marmite</span>
-            </h1>
-            <h2>Spread The Joy</h2>
+            <h2>
+              <span>Brimming</span>
+              {/* <span>Marmite</span> */}
+            </h2>
+            {/* <h2>Spread The Joy</h2> */}
           </a>
         </Link>
       </header>
