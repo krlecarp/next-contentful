@@ -60,7 +60,8 @@ export default function RecipeDetails({activity}) {
   const { heroImage, title, descriptionLong, descriptionFull } = activity.fields 
   console.log(activity)
 
-         {/* actions: (3) [{…}, {…}, {…}]
+         {/* 
+        actions: (3) [{…}, {…}, {…}]
         articlesRelated: [{…}]
         barriersRelated: [{…}]
         descriptionLong: "Lightweight, free-flying, foot-launched glider aircraft with no rigid primary structure.  One part adrenaline, one part serenity."
